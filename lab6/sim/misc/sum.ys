@@ -1,0 +1,48 @@
+# Name: Zheng YuChen
+# ID: 515030910477
+
+# Execution begins at address 0
+    .pos 0
+init:
+    irmovl Stack, %esp
+    irmovl Stack, %ebp
+    irmovl ele1, %eax
+    pushl %eax
+    call sum_list
+    halt
+
+# int sum_list(list_ptr ls)
+sum_list:
+    pushl %ebp
+    rrmovl %esp, %ebp
+    mrmovl 8(%ebp), %ecx
+    xorl %eax, %eax				# val = 0
+
+Loop:
+	andl %ecx, %ecx				# Set condition codes
+	je End
+	mrmovl (%ecx), %edx
+	addl %edx, %eax				# val += ls->val
+	mrmovl 4(%ecx), %ecx		# ls = ls->next
+	jmp Loop					# Stop when 0
+
+End:
+	rrmovl %ebp, %esp
+	popl %ebp
+	ret
+
+# Sample linked list 
+.align 4
+ele1:
+    .long 0x00a
+    .long ele2
+ele2:
+    .long 0x0b0
+    .long ele3
+ele3:
+    .long 0xc00
+    .long 0
+
+# Stack
+    .pos 0x100
+Stack:
